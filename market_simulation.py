@@ -14,3 +14,8 @@ class TradableAssets:
     
     def getPrice(self):
         return self.price
+
+    def randomPriceMovement(self):
+        priceChange = random.uniform(-5, 5)
+        self.price += priceChange
+        self.history.append(self.price)
