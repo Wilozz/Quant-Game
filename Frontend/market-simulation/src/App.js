@@ -1,23 +1,13 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ textAlign: "center", padding: "50px" }}>
+      <h1>Welcome to the Trading Platform</h1>
+      <p>Buy and sell assets in real-time!</p>
+      <button onClick={() => alert('Trading feature coming soon!')}>
+        Trade Now
+      </button>
     </div>
   );
 }
