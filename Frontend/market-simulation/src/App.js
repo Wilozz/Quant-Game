@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import UserMenu from "./userMenu";
 import ProfilePage from "./profilePage";
 import SettingsPage from "./settingsPage";
+import MainPage from "./MainPage"; 
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);  
@@ -17,9 +18,9 @@ function App() {
         <UserMenu toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
 
         <Routes>
+          <Route path="/" element={<MainPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/" element={<h1>Welcome to the Trading Platform</h1>} />
         </Routes>
       </div>
     </Router>
@@ -29,10 +30,3 @@ function App() {
 export default App;
 
 
-{/* <div style={{ textAlign: "center", padding: "50px" }}>
-      <h1>Welcome to the Trading Platform</h1>
-      <p>Buy and sell assets in real-time!</p>
-      <button onClick={() => alert('Trading feature coming soon!')}>
-        Trade Now
-      </button>
-    </div> */}

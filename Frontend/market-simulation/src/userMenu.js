@@ -10,17 +10,17 @@ function UserMenu({ toggleDarkMode, isDarkMode }) {
       <div
         onClick={() => setIsOpen(!isOpen)}
         style={{
-          width: "40px",
-          height: "40px",
-          borderRadius: "50%",
+          width: "50px",
+          height: "50px",
+          borderRadius: "50%", // Border radius curves the corners, 50% makes it a circle
           background: "gray",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          cursor: "pointer",
+          display: "flex", // Makes the circle a flex object so I can customise child items
+          alignItems: "center", // Aligns vertically 
+          justifyContent: "center", // Aligns horizontally
+          cursor: "pointer", // Changes the cursor style when hovering over the object
           position: "absolute",
-          top: "10px",
-          right: "10px"
+          top: "20px",
+          right: "20px"
         }}
       >
         W
