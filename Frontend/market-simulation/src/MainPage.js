@@ -49,15 +49,17 @@ function MainPage() {
       });
 
       const data = await response.json();
-      alert(data.message); // Show the message from the backend
+      alert(data.message);
       
-      // Update the order book with the data from the backend
       setOrderBook({
-        bids: data.bids, // Updated bids
-        asks: data.asks  // Updated asks
+        bids: data.bids,
+        asks: data.asks  
       });
+
+      setQuantity("");
+      setPrice("");
       
-      // Fetch the order book again after placing an order
+
       fetchOrderBook();
     } catch (error) {
       console.error("Error placing order:", error);
@@ -68,17 +70,22 @@ function MainPage() {
   useEffect(() => {
     fetchOrderBook();
     
-    // Optional: Refresh the order book every 3 seconds
     const intervalId = setInterval(fetchOrderBook, 3000);
     
-    // Cleanup the interval when the component unmounts
     return () => clearInterval(intervalId);
-  }, []);  // Empty array means it only runs once when the component mounts
+  }, []); 
 
   return (
     <div style={{ textAlign: "center", padding: "50px" }}>
       <h1>Welcome to the Trading Platform</h1>
       <p>Buy and sell assets in real-time!</p>
+
+      <div style={{ display: "flex", justifyContent: "flex-end", paddingRight: "20px" }}>
+        <div style={{ border: "1px solid gray", width: "200px", height: "50px", textAlign: "center" }}>
+          <strong>Profit/Loss:</strong><br />
+          $0.00
+        </div>
+      </div>
 
       {/* Trading Feature */}
       <div style={{ marginBottom: "20px" }}>
@@ -117,16 +124,15 @@ function MainPage() {
 
               return (
                 <div key={price} style={{ display: "flex", alignItems: "center", marginBottom: "2px" }}>
+                  <div style={{ width: "60px", textAlign: "center", fontWeight: "bold" }}>{price}</div>
+                  
                   {/* Bids Bar */}
                   <div style={{
                     width: `${(bidQty / 100) * maxBarWidth}px`,
                     backgroundColor: "green",
                     height: "20px",
-                    marginLeft: "5px"
+                    marginRight: "5px"
                   }} />
-
-                  <div style={{ width: "60px", textAlign: "center" }}>Price: {price}</div>
-
                 </div>
               );
             })}
@@ -145,14 +151,14 @@ function MainPage() {
               return (
                 <div key={price} style={{ display: "flex", alignItems: "center", marginBottom: "2px" }}>
 
-                  <div style={{ width: "60px", textAlign: "center" }}>Price: {price}</div>
+                  <div style={{ width: "60px", textAlign: "center", fontWeight: "bold" }}>{price}</div>
 
                   {/* Asks Bar */}
                   <div style={{
                     width: `${(askQty / 100) * maxBarWidth}px`,
                     backgroundColor: "red",
                     height: "20px",
-                    marginLeft: "5px"
+                    marginRight: "5px"
                   }} />
                 </div>
               );
@@ -160,9 +166,6 @@ function MainPage() {
           </div>
         </div>
       </div>
-
-
-
     </div>
   );
 }
