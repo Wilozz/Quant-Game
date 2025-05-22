@@ -6,17 +6,26 @@ function MainPage() {
   const [price, setPrice] = useState("");
   const [orderType, setOrderType] = useState("buy");
 
+  const aggregateOrders = (orders) => {
+    const result = {};
+    for (let price = 1; price <= 100; price++) {
+      const orderList = orders[price] || []; 
+      result[price] = orderList.reduce((sum, [, quantity]) => sum + quantity, 0);
+    }
+    return result; 
+  }
+
+  const aggregatedBids = aggregateOrders(orderBook.bids);
+  const aggregatedAsks = aggregateOrders(orderBook.asks);
+
   // Function to fetch the order book from flask
   const fetchOrderBook = async () => {
     try {
-      console.log("Trying to fetch order book")
       const response = await fetch("http://127.0.0.1:8000/orderbook");
       const data = await response.json();
       setOrderBook(data);  // Update the state with the latest order book
-      console.log("ORder book data", data)
     } catch (error) {
       console.error("Error fetching order book:", error);
-      console.log("Failed")
     }
   };
 
@@ -79,16 +88,16 @@ function MainPage() {
         </select>
         <input
           type="number"
-          placeholder="Quantity"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
+          placeholder="Price"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
           style={{ marginLeft: "10px" }}
         />
         <input
           type="number"
-          placeholder="Price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          placeholder="Quantity"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
           style={{ marginLeft: "10px" }}
         />
         <button onClick={placeOrder} style={{ marginLeft: "10px" }}>
@@ -96,55 +105,64 @@ function MainPage() {
         </button>
       </div>
 
-      {/* Order Book Display */}
-      <h2>Order Book</h2>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        {/* Bids Section */}
-        <div style={{ marginRight: "50px" }}>
+      <div style={{ display: "flex", justifyContent: "center", gap: "40px" }}>
+        <div style = {{ display: "flex", alignItems: "center", flexDirection: "column"}}>
           <h3>Bids</h3>
-          {Object.entries(orderBook.bids).length > 0 ? (
-            <ul>
-              {Object.entries(orderBook.bids).map(([price, orders]) => (
-                <li key={price}>
-                  <strong>${price}</strong>: {orders.length} orders
-                  <ul>
-                    {orders.map(([orderId, quantity]) => (
-                      <li key={orderId}>
-                        Order ID: {orderId}, Quantity: {quantity}
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No bids yet</p>
-          )}
-        </div>
+          <div style={{ maxHeight: "600px", width: "400px", overflowY: "scroll", border: "1px solid gray", padding: "10px" }}>
+            {Array.from({ length: 100 }, (_, i) => {
+              const price = 100 - i;  
+              const bidQty = aggregatedBids[price] || 0;
 
-        {/* Asks Section */}
-        <div>
+              const maxBarWidth = 200; // px
+
+              return (
+                <div key={price} style={{ display: "flex", alignItems: "center", marginBottom: "2px" }}>
+                  {/* Bids Bar */}
+                  <div style={{
+                    width: `${(bidQty / 100) * maxBarWidth}px`,
+                    backgroundColor: "green",
+                    height: "20px",
+                    marginLeft: "5px"
+                  }} />
+
+                  <div style={{ width: "60px", textAlign: "center" }}>Price: {price}</div>
+
+                </div>
+              );
+            })}
+          </div>   
+        </div>
+        
+        <div style = {{ display: "flex", alignItems: "center", flexDirection: "column"}}>
           <h3>Asks</h3>
-          {Object.entries(orderBook.asks).length > 0 ? (
-            <ul>
-              {Object.entries(orderBook.asks).map(([price, orders]) => (
-                <li key={price}>
-                  <strong>${price}</strong>: {orders.length} orders
-                  <ul>
-                    {orders.map(([orderId, quantity]) => (
-                      <li key={orderId}>
-                        Order ID: {orderId}, Quantity: {quantity}
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No asks yet</p>
-          )}
+          <div style={{ maxHeight: "600px", width: "400px", overflowY: "scroll", border: "1px solid gray", padding: "10px" }}>
+            {Array.from({ length: 100 }, (_, i) => {
+              const price = 100 - i; 
+              const askQty = aggregatedAsks[price] || 0;
+
+              const maxBarWidth = 200; // px
+
+              return (
+                <div key={price} style={{ display: "flex", alignItems: "center", marginBottom: "2px" }}>
+
+                  <div style={{ width: "60px", textAlign: "center" }}>Price: {price}</div>
+
+                  {/* Asks Bar */}
+                  <div style={{
+                    width: `${(askQty / 100) * maxBarWidth}px`,
+                    backgroundColor: "red",
+                    height: "20px",
+                    marginLeft: "5px"
+                  }} />
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
+
+
+
     </div>
   );
 }
